@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: my-blog-nginx
+    restart: always
+    ports:
+      - "3000:80"
+    volumes:
+      - ./views:/usr/share/nginx/html/views:ro
+      - ./public:/usr/share/nginx/html/public:ro
+      # - ../view/pages/404.html:/etc/nginx/conf.d/404.html:ro
+  my-blog:
+    build: .
+    image: baderidris/my-blog
+    # container_name: my-blog-container
+    environment:
+      - PORT=3000
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:4.4
+    container_name: my-blog-mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=Bader
+      - MONGO_INITDB_ROOT_PASSWORD=myPassword
+    volumes:
+      - mongo-db:/data/db:rw  # 🔴chmod +x if (node.length > 1)🔴
+      - ./config/mongo/mongod.conf:/etc/mongod.conf:ro
+    command: mongod --config /etc/mongod.conf  # Specify the custom configuration file path
+  redis:
+    image: redis:alpine3.18
+    container_name: my-blog-redis
+    restart: always
+    volumes:
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+      # - ./config/redis/.overcommit_memory:/proc/sys/vm/overcommit_memory
+    # command:
+      # - sh -c "echo 1 > /proc/sys/vm/overcommit_memory"
+      # - ./redis-server /usr/local/etc/redis/redis.conf
+      # - redis-server AUTH default myPassword
+      # - AUTH default myPassword
+  postgres:
+    image: postgres:16-alpine3.18
+    container_name: my-blog-psql
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: articles
+    volumes:
+      - psql-data:/var/lib/postgresql/data:rw  # 🔴chmod +x if (node.length > 1)🔴
+      - ./config/psql/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+  # adminer:  # i think it's not important to have
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+volumes:
+  mongo-db:
+  psql-data:
