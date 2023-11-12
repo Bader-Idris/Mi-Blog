@@ -1,23 +1,20 @@
 const  path = require("path");
-const  asyncErrors = require("express-async-errors");
-const  cors = require("cors");
-const  helmet = require("helmet");
-const  xss = require("xss-clean");
-const  figlet = require("figlet");// for ascii art
-const  express = require("express");
+require("express-async-errors");
+const cors = require("cors");
+const helmet = require("helmet");
+const xss = require("xss-clean");
+// const figlet = require("figlet");// for ascii art
+const express = require("express");
 const app = express();
-// const  { google } = require('googleapis');//, youtube_v3 2nd param
-const  { connectDB } = require("./db/connect");
-// const  authenticateUser = require("../middleware/authentication");
+const { connectDB } = require("./db/connect");
+const authenticateUser = require("./middleware/authentication");
 
-
-// const authRouter = require("./routes/auth");
+const authRouter = require("./routes/auth");
 // const jobsRouter = require("./routes/jobs");
 const backEndApis = require("./routes/backEndApis");
 const  frontAPIs = require("./routes/front-routers");
 // error handler
-const   notFoundMiddleware = require('./middleware/not-found');
-const   errorHandlerMiddleware = require('./middleware/error-handler');
+const errorHandlerMiddleware = require('./middleware/error-handler');
 
 
 const {
@@ -25,11 +22,7 @@ const {
   MONGO_PASSWORD,
   MONGO_IP,
   MONGO_PORT,
-  // REDIS_URL,
-  // REDIS_PORT,
-  // REDIS_USER,
-  // REDIS_PASSWORD,
-  // SESSION_SECRET,
+  // REDIS_URL, REDIS_PORT, REDIS_USER, REDIS_PASSWORD, SESSION_SECRET,
 
 } = require("./config/config");
 
@@ -56,59 +49,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, './public')));
 
-// const YOUTUBE_API_V3 = 'AIzaSyDPDrhysLWuG3DL-509OfgSr_6yDLeOOPY';
-// const youtube = google.youtube({
-//   version: "v3",
-//   auth: YOUTUBE_API_V3,
-// });
-
 app.use("/", frontAPIs);
-app.use("/api/", backEndApis);
+app.use("/api/v1", backEndApis);
 
-// from 6.5 John
-// app.use('/api/v1/auth', authRouter);
-// app.use('/api/v1/jobs', authenticateUser, jobsRouter);
-
-// app.get('*', (req, res) => {
-//   res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
-// });
-
-app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-// const videoRoute = async (req, res) => {
-//   const { youtube } = google;
-//   const youtubeClient = youtube({
-//     version: "v3",
-//     auth: YOUTUBE_API_V3,
-//   });
-
-//   const videoId = 'Z434ZmDkxzU'; // Extract the video ID from the YouTube URL
-//   try {
-//     const response = await youtubeClient.videos.list({
-//       id: videoId,
-//       part: 'snippet',
-//     });
-//     const video = response.data.items[0];
-//     // Construct the video URL
-//     const videoUrl = `https://www.youtube.com/embed/${video.id}`;
-
-//     // Create an object with the necessary data
-//     const responseData = {
-//       videoTitle: video.snippet.title,
-//       videoUrl: videoUrl,
-//     };
-
-//     // Send the response as JSON
-//     res.json(responseData);
-//   } catch (error) {
-//     console.error('Error retrieving video details:', error);
-//     res.status(500).send('Error retrieving video details');
-//   }
-// };
-// app.use('/api/video', videoRoute);
-// app.get('/video', );
-
+app.get('*', (req, res) => {
+  res.status(404).sendFile(path.join(__dirname, './views/404.html'));
+});
 
 const mongoURL = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?
 authSource=admin`;
@@ -128,5 +76,4 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => 
   console.log( `Listening on port ${port}...` )
 );
-
 // check object define property, in js which is similar to ts annotations

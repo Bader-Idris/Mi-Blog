@@ -10,7 +10,7 @@ services:
     volumes:
       - ./views:/usr/share/nginx/html/views:ro
       - ./public:/usr/share/nginx/html/public:ro
-      # - ../view/pages/404.html:/etc/nginx/conf.d/404.html:ro
+      - ./views/404.html:/etc/nginx/conf.d/404.html:ro
   my-blog:
     build: .
     image: baderidris/my-blog

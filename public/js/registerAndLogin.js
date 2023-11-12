@@ -80,7 +80,7 @@ document.querySelector('#signup form').addEventListener('submit', function (e) {
   };
 
   // Send request via fetch
-  fetch('/api/signup', {
+  fetch('/api/v1/signup', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -109,7 +109,7 @@ document.querySelector('#login form').addEventListener('submit', function (e) {
     password: password,
     remember_me: remember_me
   };
-  fetch('/api/login', {
+  fetch('/api/v1/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -201,17 +201,17 @@ With browser caching enabled, your clients' browsers will cache your static reso
 <!-- 
   html req.body
 
-  signup http://localhost:3000/api/signup
+  signup http://localhost:3000/api/v1/signup
   fName lName email password
 
-  login http://localhost:3000/api/login
+  login http://localhost:3000/api/v1/login
   email
   password
 
 
   
 
-  POST to http://localhost:3000/api/login
+  POST to http://localhost:3000/api/v1/login
   req.body:
   {
     "email":"www.bader.com9@gmail.com",
@@ -222,7 +222,7 @@ With browser caching enabled, your clients' browsers will cache your static reso
 
 
 
-  POST to http://localhost:3000/api/login
+  POST to http://localhost:3000/api/v1/login
   req.body:
   {
     "email":"www.bader.com9@gmail.com",
@@ -237,7 +237,7 @@ With browser caching enabled, your clients' browsers will cache your static reso
 
  so, if I send this request body as a post verb via postman:
 
-  POST to http://localhost:3000/api/login
+  POST to http://localhost:3000/api/v1/login
   req.body:
   {
     "email":"www.bader.com9@gmail.com",
@@ -247,7 +247,7 @@ With browser caching enabled, your clients' browsers will cache your static reso
   }
 
 into this path:
-http://localhost:3000/api/signup
+http://localhost:3000/api/v1/signup
 
 
 will it get sent to my server without any front-end issue??

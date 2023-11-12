@@ -23,6 +23,8 @@ services:
       - REDIS_PASSWORD=myPassword
       - POSTGRES_PASSWORD=example
       - POSTGRES_DB=articles
+      - JWT_SECRET=jwtSecret
+      - JWT_LIFETIME=3h
     command: npm run dev
   mongo:
     environment:

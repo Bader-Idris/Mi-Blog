@@ -7,7 +7,7 @@
   <h1 id="video-title"></h1>
   <div id="video-container"></div>
   <script>
-    fetch('/api/video')
+    fetch('/api/v1/video')
       .then(response => response.json())
       .then(data => {
         const videoTitleElement = document.getElementById('video-title');

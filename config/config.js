@@ -12,5 +12,7 @@ module.exports = {
   PSQL_HOST: process.env.PSQL_HOST || "postgres",
   PSQL_PORT: process.env.PSQL_PORT || 5432,
   POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
-  POSTGRES_DB: process.env.POSTGRES_DB
+  POSTGRES_DB: process.env.POSTGRES_DB,
+  JWT_SECRET: process.env.JWT_SECRET,
+  JWT_LIFETIME: process.env.JWT_LIFETIME
 }
