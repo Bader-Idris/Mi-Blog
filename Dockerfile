@@ -1,4 +1,4 @@
-FROM node:21
+FROM node:20.9.0-alpine3.18
 WORKDIR /my-blog
 COPY package.json .
 ARG NODE_ENV
