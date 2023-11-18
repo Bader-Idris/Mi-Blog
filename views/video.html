@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>YouTube Video</title>
+</head>
+<body>
+  <h1 id="video-title"></h1>
+  <div id="video-container"></div>
+  <script>
+    fetch('/api/v1/video')
+      .then(response => response.json())
+      .then(data => {
+        const videoTitleElement = document.getElementById('video-title');
+        const videoContainer = document.getElementById('video-container');
+        videoTitleElement.textContent = data.videoTitle;
+
+        const videoElement = document.createElement('video');
+        videoElement.src = data.videoUrl;
+        videoContainer.appendChild(videoElement);
+      })
+      .catch(error => {
+        console.error('Error retrieving video:', error);
+      });
+  </script>
+</body>
+</html>
