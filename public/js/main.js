@@ -7,8 +7,6 @@ registerContainer.addEventListener('click', (e) => {
   window.location.href = registerUrl;
 });
 
-
-
 const navOptions = document.querySelectorAll('.header .main-nav>li>a');
 const copyrightSpan = document.querySelector('footer .copyright');
 
@@ -38,48 +36,62 @@ if (socialIcons) {
 const curYear = new Date();// get it from server, users can change it
 const fullYear = curYear.getFullYear();
 
-copyrightSpan.innerHTML = `Copyright  &#169 ${fullYear} All Rights Reserved.`
+// copyrightSpan.innerHTML = `Copyright  &#169 ${fullYear} All Rights Reserved.`
 
+// ----------------------------------------------------------------------
 
 /*
-- views/
-- tsconfig.json
-- src/
-  - routes/
-    - mongodb.js
-    - postgresql.js
-    - redis.js
-  - controllers/
-    - mongodbController.js
-    - postgresqlController.js
-    - redisController.js
-  - models/
-    - mongodb/
-      - userModel.js
-      - ...
-    - postgresql/
-      - userModel.js
-      - ...
-    - redis/
-      - cacheModel.js
-      - ...
-  - middleware/
-    - authentication.js
-    - ...
-  - config/
-    - database.js
-    - redis.js
-    - ...
-  - ...
-- public/
-- package-lock.json
-- package.json
-- node_modules/
-- Dockerfile
-- dist/
-- bin/
-- b.yml
-- a.yml
-- README.md
-- redis/
+let queryButton = document.getElementById('queryButton');
+queryButton.parentElement.addEventListener('click', async function (e) {
+  e.preventDefault();
+  try {
+    const response = await fetch('/api/v1/query');
+    if (response.ok) {
+      const data = await response.text();
+      prompt('Query Data', data);
+      console.log(data);
+    } else {
+      throw new Error('Error: ' + response.status);
+    }
+  } catch (error) {
+    console.log('Error:', error);
+  }
+});
+
 */
+function fetchData() {
+  fetch('http://localhost:3000/api/v1/query', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Error: ' + response.status);
+      }
+    })
+    .then((data) => {
+      // Create a new <div> element
+      const newDiv = document.createElement('div');
+
+      // Convert the data object to a string
+      const dataString = JSON.stringify(data);
+
+      // Set the content of the new <div> to the stringified data
+      newDiv.textContent = dataString;
+
+      // Append the new <div> to the document body
+      document.body.appendChild(newDiv);
+    })
+    .catch((error) => {
+      console.log('Error:', error);
+    });
+}
+
+document.getElementById('queryButton').parentElement.addEventListener('click', function (e) {
+  e.preventDefault();
+  fetchData();
+});

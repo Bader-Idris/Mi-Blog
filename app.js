@@ -3,22 +3,21 @@ require("express-async-errors");
 const cors = require("cors");
 const helmet = require("helmet");
 const xss = require("xss-clean");
-// const figlet = require("figlet");// for ascii art
 const session = require("express-session");
 const cookieParser = require('cookie-parser');
 const redis = require("redis");
+const RedisStore = require("connect-redis").default
 const express = require("express");
 const app = express();
 const { connectDB } = require("./db/connect");
 const authenticateUser = require("./middleware/authentication");
 
 const authRouter = require("./routes/auth");
-// const jobsRouter = require("./routes/jobs");
+
 const backEndApis = require("./routes/backEndApis");
 const  frontAPIs = require("./routes/front-routers");
 // error handler
 const errorHandlerMiddleware = require('./middleware/error-handler');
-
 
 const {
   MONGO_USER,
@@ -37,22 +36,24 @@ let redisClient = redis.createClient({
   port: REDIS_PORT,
 })
 
-app.use(
-  helmet({//this helmet stops any new api, keep an eye on it when adding new ones
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        // Add other CSP directives as needed [Content Security Policy ]
-        scriptSrc: ["'self'", "http://bun:3000"],
-        frameSrc: ["'self'", "https://www.youtube.com"],
-        styleSrcElem: ["'self'", "https://fonts.googleapis.com"],
-      },
+app.use(helmet({//this helmet stops any new api, keep an eye on it when adding new ones
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      // Add other CSP directives as needed [Content Security Policy]
+      scriptSrc: ["'self'", "http://bun:3000", "'unsafe-inline'"],
+      frameSrc: ["'self'", "https://www.youtube.com"],
+      styleSrcElem: ["'self'", "https://fonts.googleapis.com"],
     },
-  })
-);
+  },
+}));
 
 app.enable("trust proxy");
 app.use(cors());
+// app.use(cors({
+//   origin: 'http://testing.com',
+//   optionsSuccessStatus: 200,
+// }));
 app.disable("x-powered-by");
 app.use(xss());
 
@@ -65,6 +66,22 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
 }));
+/*
+app.use(session({
+  store: new RedisStore({
+    client: redisClient
+  }),
+  secret: SESSION_SECRET,
+  cookie: {
+    // to learn more about those cookie properties, check express-session library, view options
+    secure: false, //http allowed🔴, if true => https only ✔️
+    resave: false,
+    saveUninitialized: false,
+    httpOnly: true,//js browser won't be able to access it, which is good for preventing XSS
+    maxAge: 1800000,// in millisecond
+  }
+}))
+*/
 
 app.use("/", frontAPIs);
 app.use("/api/v1", backEndApis);

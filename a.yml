@@ -15,6 +15,7 @@ services:
     build: .
     image: baderidris/my-blog
     # container_name: my-blog-container
+    restart: always
     environment:
       - PORT=3000
     depends_on:
