@@ -41,7 +41,7 @@ copyrightSpan.innerHTML = `Copyright  &#169 ${fullYear} All Rights Reserved.`
 // ----------------------------------------------------------------------
 
 function fetchData() {
-  fetch('http://localhost:3000/api/v1/query', {
+  fetch('/api/v1/query', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -56,12 +56,11 @@ function fetchData() {
     })
     .then((data) => {
       const newDiv = document.createElement('div');
+      newDiv.className = 'query-yo'
       // Convert the data object to a string
       const dataString = JSON.stringify(data);
-      // Set the content of the new <div> to the stringified data
-      newDiv.textContent = dataString;
-      // Append the new <div> to the document body
-      document.body.appendChild(newDiv);
+      newDiv.textContent = JSON.parse(dataString)[0];
+      document.getElementById('queryButton').parentElement.append(newDiv)
     })
     .catch((error) => {
       console.log('Error:', error);

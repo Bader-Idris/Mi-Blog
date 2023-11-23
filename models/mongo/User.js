@@ -1,7 +1,7 @@
 const {
   JWT_SECRET,
   JWT_LIFETIME
-} = require('../../config/config')
+} = require('../../config/config');
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const UserSchema = new mongoose.Schema({
-  name: {
+  fName: {
     type: String,
     required: [true, 'Please provide name'],
     maxlength: 50,
@@ -29,11 +29,10 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Please provide password'],
     minlength: 6,
   },
-  lastName: {
+  lName: {
     type: String,
     trim: true,
     maxlength: 20,
-    default: 'lastName',
   },
   location: {
     type: String,
@@ -45,7 +44,7 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.pre('save', async function () {
   if (!this.isModified('password')) return;
-  const salt = await bcrypt.genSalt(10);
+  const salt = await bcrypt.genSalt(12);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
@@ -59,8 +58,8 @@ UserSchema.methods.createJWT = function () {
   );
 };
 
-UserSchema.methods.comparePassword = async function (canditatePassword) {
-  const isMatch = await bcrypt.compare(canditatePassword, this.password);
+UserSchema.methods.comparePassword = async function (candidatePassword) {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password);
   return isMatch;
 };
 

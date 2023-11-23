@@ -8,14 +8,13 @@ const register = async (req, res) => {
   res.status(StatusCodes.CREATED).json({
     user: {
       email: user.email,
-      lastName: user.lastName,
+      lastName: user.lName,
       location: user.location,
-      name: user.name,
+      name: user.fName,
       token,
     },
   });
 };
-// little register took an hour from John to explain [token, jwt, salt & bcrypt]
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -40,6 +39,14 @@ const login = async (req, res) => {
       name: user.name,
       token,
     },
+    /*
+    {
+    "fName": "bader",
+    "lName": "idris",
+    "email": "www.bader.com9@gmail.com",
+    "password": "ilovehanade"
+    }
+     */
   });
 };
 

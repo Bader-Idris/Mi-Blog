@@ -24,6 +24,7 @@ const {
   MONGO_PASSWORD,
   MONGO_IP,
   MONGO_PORT,
+  MONGO_DB_NAME,
   REDIS_URL,
   REDIS_PORT,
   REDIS_USER,
@@ -66,22 +67,21 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
 }));
-/*
+
 app.use(session({
   store: new RedisStore({
     client: redisClient
   }),
   secret: SESSION_SECRET,
   cookie: {
-    // to learn more about those cookie properties, check express-session library, view options
     secure: false, //http allowed🔴, if true => https only ✔️
     resave: false,
     saveUninitialized: false,
     httpOnly: true,//js browser won't be able to access it, which is good for preventing XSS
-    maxAge: 1800000,// in millisecond
+    maxAge: 1800000,// 📏 to ms
   }
 }))
-*/
+
 
 app.use("/", frontAPIs);
 app.use("/api/v1", backEndApis);
@@ -92,9 +92,14 @@ app.get('*', (req, res) => {
   res.status(404).sendFile(path.join(__dirname, './views/404.html'));
 });
 
-const mongoURL = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?
-authSource=admin`;
-
+const mongoURL = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/${MONGO_DB_NAME}?authSource=admin`;
+// docker exec -it my-blog-mongo mongo -u Bader -p myPassword --authenticationDatabase admin
+// show dbs
+// use <database_name>
+// show collections
+// db.<collection_name>
+// db.<collection_name>.find()
+// db.<collection_name>.find({ field: "value" })
 const connectWithRetry = async () => {
   try {
     await connectDB(mongoURL);
@@ -132,4 +137,52 @@ To recognize the user's system mode and implement it in a way that caters to var
 8. **Device-Specific Considerations**: Consider any device-specific nuances or limitations when implementing the system mode. For example, some older browsers or devices may not support certain CSS features required for seamless mode switching.
 By implementing these steps, you can recognize the user's system mode and provide a consistent experience across different devices. Storing user preferences in a database allows for persistence and retrieval of preferences even when users switch between devices.
 Remember to handle user privacy concerns and ensure that you comply with data protection regulations when storing and using user preferences in your database.
+*/
+
+
+/* plans
+  sql articles ✅
+  mongo
+  - create users database()
+1. `users` collection:
+  - `_id`: Unique identifier for each user.
+  - `username`: User's username.
+  - `email`: User's email address.
+  - `password`: User's hashed password.
+  - `createdAt`: Timestamp indicating when the user account was created.
+  - `updatedAt`: Timestamp indicating the last update to the user account.
+
+2. `profiles` collection:
+  - `_id`: Unique identifier for each profile.
+  - `userId`: Foreign key referencing the corresponding user.
+  - `name`: User's full name.
+  - `avatar`: URL or file path to the user's profile picture.
+  - `bio`: User's biography or description.
+  - `location`: User's location information.
+  - `website`: User's personal website or portfolio URL.
+
+3. `roles` collection:
+  - `_id`: Unique identifier for each role.
+  - `name`: Role name or label (e.g., "admin", "editor", "user").
+  - `permissions`: Array of permissions associated with the role.
+
+4. `sessions` collection:
+  - `_id`: Unique identifier for each session.
+  - `userId`: Foreign key referencing the corresponding user.
+  - `token`: Session token for authentication.
+  - `createdAt`: Timestamp indicating when the session was created.
+  - `expiresAt`: Timestamp indicating when the session expires.
+
+5. `activities` collection:
+  - `_id`: Unique identifier for each activity.
+  - `userId`: Foreign key referencing the corresponding user.
+  - `type`: Type of activity (e.g., "login", "update", "password change").
+  - `timestamp`: Timestamp indicating when the activity occurred.
+
+6. `notifications` collection:
+  - `_id`: Unique identifier for each notification.
+  - `userId`: Foreign key referencing the corresponding user.
+  - `message`: Content of the notification.
+  - `isRead`: Boolean flag indicating whether the notification has been read.
+  - `createdAt`: Timestamp indicating when the notification was created.
 */

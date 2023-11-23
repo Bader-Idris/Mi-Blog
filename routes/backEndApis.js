@@ -9,18 +9,11 @@ const {
   articlesDB,
 } = require("../controllers/articlesDB");
 
-router.route("/signup").post(signUpController);
-router.route("/login").post(logInController);
+// important one
+const { register, login, updateUser } = require('../controllers/auth');
+router.route("/signup").post(register ,signUpController);
+router.route("/login").post(login, logInController);
 
 router.route("/query").get(articlesDB);
 router.route("/video").get(getYouTubeVideo);
-
-
-// from 6.5 John
-// app.use('/api/v1/auth', authRouter);
-// app.use('/api/v1/jobs', authenticateUser, jobsRouter);
-
-
-// router.post('/register', apiLimiter, register);
-// router.post('/login', apiLimiter, login);
 module.exports = router;

@@ -65,25 +65,34 @@ tabLinks.forEach(function (link) {
 // mine 🔽
 document.querySelector('#signup form').addEventListener('submit', function (e) {
   e.preventDefault();
-
-  // Serialize form data manually
   const firstName = document.querySelector('input[name="fName"]').value;
   const lastName = document.querySelector('input[name="lName"]').value;
   const email = document.querySelector('input[name="email"]').value;
   const password = document.querySelector('input[name="password"]').value;
-
   const data = {
     fName: firstName,
     lName: lastName,
     email: email,
     password: password
   };
-
-  // Send request via fetch
+  // const token = `Bearer ${something._id}`;//process.env.JWT_SECRET
   fetch('/api/v1/signup', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
+      // ,'Authorization': `Bearer ${token}`
+      /*
+      follow a server-side approach where the front-end sends a request to your server, and the server handles the authentication and authorization process. The server can then include the `Authorization` header with the appropriate token when making requests to external APIs or performing any authorized actions.
+      Here's a general outline of the process:
+      1. When the user logs in or authenticates on the front-end, send the credentials securely to the server.
+      2. On the server-side, validate the credentials and generate an access token or session token.
+      3. Store the access token or session token securely on the server, associating it with the authenticated user.
+      4. When the front-end needs to make authorized requests, send the request to your server.
+      5. On the server-side, retrieve the access token or session token associated with the user making the request.
+      6. Include the `Authorization` header with the token when making requests to external APIs or performing authorized actions.
+      By handling the token securely on the server-side, you can prevent clients from directly accessing sensitive information like the token.
+      Remember to implement secure authentication and authorization mechanisms on the server-side, such as using secure protocols (HTTPS), hashing and salting passwords, and validating user credentials properly.
+      */
     },
     body: JSON.stringify(data)
   })
@@ -139,36 +148,18 @@ document.querySelector('#login form').addEventListener('submit', function (e) {
 /* 
 
 <!--
-  tell me more and in details about these options you provided:
-Security Considerations
 Resource Allocation
 
-Certainly! Here are more details about security considerations and resource allocation when working with Docker containers:
-
-1. Security Considerations:
-   - Secure Passwords: Ensure that you use strong, unique passwords for services inside your Docker containers, including databases like MongoDB and PostgreSQL. Weak passwords can make your containers vulnerable to unauthorized access.
-   - Network Security: Limit access to your containers by configuring network security rules. Utilize firewalls, network policies, or security groups to restrict access to specific ports and IP addresses.
-   - Container Isolation: Isolate your containers from each other to minimize the impact of potential security breaches. Use separate networks or network segments for different services to prevent lateral movement within your infrastructure.
-   - Image Security: Use trusted base images from official sources or reputable repositories. Regularly update your images to ensure you have the latest security patches and bug fixes.
-   - Secrets Management: Avoid hard-coding sensitive information like passwords or API keys in your Docker Compose files. Instead, use secrets management tools like Docker Swarm secrets, HashiCorp Vault, or cloud provider-specific secret management services to securely manage and distribute secrets to your containers.
-
 2. Resource Allocation:
-   - CPU and Memory Limits: Set appropriate CPU and memory limits for your containers based on the resource requirements of your applications. This prevents containers from monopolizing system resources and ensures fair resource allocation across all services.
-   - Monitoring and Scaling: Monitor resource usage of your containers using tools like Docker stats, Prometheus, or cloud provider monitoring services. Scale your containers horizontally by increasing the number of replicas or vertically by allocating more resources to meet the demands of your application.
-   - Container Sizing: Right-size your containers by analyzing the resource utilization patterns of your applications. Avoid over-provisioning or under-provisioning resources, as it can impact performance and efficiency.
-   - Container Placement: Consider the placement of your containers across different hosts or nodes. Distribute containers based on resource availability and workload characteristics to optimize resource utilization and avoid bottlenecks.
-
-Both security considerations and resource allocation are crucial aspects of running Docker containers in production environments. By implementing appropriate security measures and optimizing resource allocation, you can enhance the stability, performance, and security of your containerized applications. It's important to continuously review and update these aspects as your infrastructure and application requirements evolve.
-
+  - CPU and Memory Limits: Set appropriate CPU and memory limits for your containers based on the resource requirements of your applications.
+  - Monitoring and Scaling: Monitor resource usage of your containers using tools like Docker stats, Prometheus, or cloud provider monitoring services.
+  - Container Placement: Consider the placement of your containers across different hosts or nodes. Distribute containers based on resource availability and workload characteristics to optimize resource utilization and avoid bottlenecks.
 
 and learn more about Healthchecks logging in docker-compose files
 
 To reduce the cost of downloading static resources like styles.css and main.js every time a client moves through your pages, you can leverage browser caching.
-
 Browser caching allows you to specify how long a browser should keep a copy of a resource (such as a CSS file) before requesting it again from the server. This can significantly reduce the number of requests made to your server and improve the performance of your website.
-
 To enable browser caching for your static resources, you can set the `Cache-Control` header in your server's response to requests for these resources. For example, you can set the header to `public, max-age=31536000` to tell the browser to cache the resource for a year.
-
 Here's an example of how you can set the `Cache-Control` header for static resources in an Express route:
 
 ```javascript
