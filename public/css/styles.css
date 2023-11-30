@@ -527,3 +527,37 @@ footer .copyright {
   background: #444;
   color: white;
 }
+
+
+
+
+
+
+
+
+
+
+/* start blog */
+.comments {
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+.comments .user {}
+.comments .user img {
+  width: 45px;
+  height: 45px;
+  background: black;
+  display: block;
+}
+.blog .paragraph {
+  padding: 20px;
+  margin: 20px auto;
+  min-width: 360px;
+  width: 80%;
+  line-height: 31px;
+  background: #222;
+  color: #ececec;
+  font-size: 20px;
+  border-radius: 4px;
+}
+/* end blog */

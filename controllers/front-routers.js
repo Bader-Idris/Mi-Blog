@@ -10,9 +10,13 @@ const registerPage = (req, res) => {
 const videoPage = (req, res) => {
   res.sendFile(path.join(__dirname, '../views/video.html'));
 }
+const blogPage = (req, res) => {
+  res.sendFile(path.join(__dirname, '../views/blog.html'));
+}
 
 module.exports = {
   mainPage,
   registerPage,
   videoPage,
+  blogPage,
 };
