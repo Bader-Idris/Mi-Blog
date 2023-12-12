@@ -71,3 +71,29 @@ document.getElementById('queryButton').parentElement.addEventListener('click', f
   e.preventDefault();
   fetchData();
 });
+
+
+// theme
+// document.querySelector(".toggleWrapper").childNodes[1].checked true
+
+// const themeCheck = document.querySelector(".toggleWrapper").childNodes[1];
+// themeCheck.addEventListener("click", () => {
+//   const colorScheme = themeCheck.checked ? 'dark' : 'light';
+
+//   fetch('api/v1/updateColorScheme', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify({ colorScheme })
+//   })
+//     .then(response => response.json())
+//     .then(data => {
+//       // Update the UI based on the received data
+//       updateColorScheme(data.colorScheme);
+//     })
+//     .catch(error => {
+//       // Handle any errors that occur during the request
+//       console.error(error);
+//     });
+// });

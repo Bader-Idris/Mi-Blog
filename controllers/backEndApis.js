@@ -1,12 +1,8 @@
+const { request } = require('express');
 const { google } = require('googleapis');//, youtube_v3 2nd param
 
-const path = require("path");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-
+// jwt and bcrypt are in models/mongo/user
 const signUpController = async (req, res) => {
-
-
   const { fName, lName, email, password } = req.body;
   if (!fName || !lName || !email || !password) return res.status(400).send('Please provide all the required fields');
   res.json({
@@ -31,7 +27,6 @@ const signUpController = async (req, res) => {
     "password": "ilovehanade"
   }
   */
-
 };
 const logInController = async (req, res) => {
   const { email, password, remember_me = false } = req.body;
@@ -47,7 +42,57 @@ const logInController = async (req, res) => {
   });
 };
 
+const {
+  SENDGRID_API_KEY,
+  MAIL_USER,
+  MAIL_PASS
+} = require("../config/config");
+const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
+const sendEmailEthereal = async (req, res) => {
+  let testAccount = await nodemailer.createTestAccount();
+
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    auth: {
+      user: MAIL_USER,
+      pass: MAIL_PASS,
+    },
+  });
+
+  let info = await transporter.sendMail({
+    from: '"Coding Addict" <codingaddict@gmail.com>',
+    to: 'www.bader.com9@gmail.com',
+    subject: 'Hello',
+    html: '<h2>Sending Emails with Node.js</h2>',
+  });
+
+  res.json(info);
+};
+
+const sendEmail = async (req, res) => {
+  sgMail.setApiKey(SENDGRID_API_KEY);
+  const msg = {
+    to: 'www.bader.com9@gmail.com, baidsforbusiness@gmail.com', // Change to your recipient
+    from: 'www.bader.com9@gmail.com', // Change to your verified sender
+    subject: 'Sending with SendGrid is Fun',
+    text: 'and easy to do anywhere, even with Node.js',
+    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+  };
+  const info = await sgMail.send(msg);
+  res.json(info);
+};
+
+/*
+! When sending email to multiple recipients, you must be careful to
+! observe the limits of your MSA. SendGrid, for example, recommends
+! limiting the number of recipients (SendGrid recommends no more
+! than a thousand in one email).
+*/
+
+// -------------------------------------------------------------
 const YOUTUBE_API_V3 = 'AIzaSyDPDrhysLWuG3DL-509OfgSr_6yDLeOOPY';// a random video I chose
 const youtube = google.youtube({
   version: "v3",
@@ -82,9 +127,9 @@ const getYouTubeVideo = async (req, res) => {
   }
 };
 
-
 module.exports = {
   signUpController,
   logInController,
   getYouTubeVideo,
+  sendEmail
 };

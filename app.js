@@ -5,8 +5,8 @@ const helmet = require("helmet");
 const xss = require("xss-clean");
 const session = require("express-session");
 const cookieParser = require('cookie-parser');
-const redis = require("redis");
-const RedisStore = require("connect-redis").default
+const { createClient } = require("redis");
+const RedisStore = require("connect-redis").default;
 const express = require("express");
 const app = express();
 const { connectDB } = require("./db/connect");
@@ -32,11 +32,6 @@ const {
   SESSION_SECRET,
 } = require("./config/config");
 
-let redisClient = redis.createClient({
-  host: REDIS_URL,
-  port: REDIS_PORT,
-})
-
 app.use(helmet({//this helmet stops any new api, keep an eye on it when adding new ones
   contentSecurityPolicy: {
     directives: {
@@ -61,32 +56,39 @@ app.use(xss());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, './public')));
-app.use(cookieParser());
-app.use(session({
-  secret: SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-}));
 
-app.use(session({
-  store: new RedisStore({
-    client: redisClient
-  }),
-  secret: SESSION_SECRET,
-  cookie: {
-    secure: false, //http allowed🔴, if true => https only ✔️
+let redisClient = createClient({
+  url: `redis://${REDIS_USER}:${REDIS_PASSWORD}@${REDIS_URL}:${REDIS_PORT}`
+});
+redisClient.connect().catch(console.error)
+// Initialize store.
+let redisStore = new RedisStore({
+  client: redisClient,
+  prefix: "myapp:",
+});
+app.use(cookieParser());
+
+app.use(
+  session({
+    store: redisStore,
     resave: false,
     saveUninitialized: false,
-    httpOnly: true,//js browser won't be able to access it, which is good for preventing XSS
-    maxAge: 1800000,// 📏 to ms
-  }
-}))
+    secret: SESSION_SECRET,
+    cookie: {
+      // resave: false,
+      // saveUninitialized: false,
+        secure: false, //http allowed🔴, if true => https only ✔️
+        httpOnly: true,//js browser won't be able to access it, which is good for preventing XSS
+        maxAge: 1800000,// 📏 to ms
+      }
+  })
+);
 
-
-app.use("/", frontAPIs);
+const colorScheme = require('./middleware/colorScheme')
+app.use("/", colorScheme, frontAPIs);
 app.use("/api/v1", backEndApis);
 
-app.use(errorHandlerMiddleware);
+// app.use(errorHandlerMiddleware);
 
 app.get('*', (req, res) => {
   res.status(404).sendFile(path.join(__dirname, './views/404.html'));
@@ -122,7 +124,6 @@ app.listen(port, () =>
 // they spoke in the console about this during development:
 // https://web.dev/custom-metrics/#server-timing-api
 // and it also sends 499 some times!
-
 
 
 /* 

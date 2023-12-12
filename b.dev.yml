@@ -20,17 +20,23 @@ services:
       - MONGO_PASSWORD=myPassword
       - MONGO_DB_NAME=myBlog
       - SESSION_SECRET=someSecret
-      - REDIS_USER=Bader
+      - REDIS_USER=default
       - REDIS_PASSWORD=myPassword
       - POSTGRES_PASSWORD=example
       - POSTGRES_DB=articles
       - JWT_SECRET=jwtSecret
       - JWT_LIFETIME=3h
+      - SENDGRID_API_KEY=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
+      - MAIL_USER=www.bader.com9@gmail.com
+      - MAIL_PASS=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
     command: npm run dev
   mongo:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=Bader
       - MONGO_INITDB_ROOT_PASSWORD=myPassword
-  # redis:
+  redis:
+    environment:
+      - REDIS_USER=default
+      - REDIS_PASSWORD=myPassword
   #   command:
   #     - redis-server --requirepass myPassword

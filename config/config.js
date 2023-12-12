@@ -15,5 +15,8 @@ module.exports = {
   POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
   POSTGRES_DB: process.env.POSTGRES_DB,
   JWT_SECRET: process.env.JWT_SECRET,
-  JWT_LIFETIME: process.env.JWT_LIFETIME
+  JWT_LIFETIME: process.env.JWT_LIFETIME,
+  SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+  MAIL_USER: process.env.MAIL_USER,
+  MAIL_PASS: process.env.MAIL_PASS
 }
