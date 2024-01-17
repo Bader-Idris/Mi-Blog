@@ -59,6 +59,7 @@ app.use(express.static(path.join(__dirname, './public')));
 
 let redisClient = createClient({
   url: `redis://${REDIS_USER}:${REDIS_PASSWORD}@${REDIS_URL}:${REDIS_PORT}`
+  // , logErrors: true, // is it deprecated? book says highly recommended
 });
 redisClient.connect().catch(console.error)
 // Initialize store.
@@ -66,7 +67,7 @@ let redisStore = new RedisStore({
   client: redisClient,
   prefix: "myapp:",
 });
-app.use(cookieParser());
+app.use(cookieParser(SESSION_SECRET));
 
 app.use(
   session({

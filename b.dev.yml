@@ -29,6 +29,7 @@ services:
       - SENDGRID_API_KEY=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
       - MAIL_USER=www.bader.com9@gmail.com
       - MAIL_PASS=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
+      #  👾 what's awesome about sendGrid, is that because i forgot to ignore this file, they deleted the api👾
     command: npm run dev
   mongo:
     environment:

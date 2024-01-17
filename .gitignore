@@ -1,2 +1,4 @@
 node_modules/
 my_blog.code-workspace
+b.prod*
+b.dev*

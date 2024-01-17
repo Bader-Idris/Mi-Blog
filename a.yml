@@ -11,6 +11,8 @@ services:
       - ./views:/usr/share/nginx/html/views:ro
       - ./public:/usr/share/nginx/html/public:ro
       - ./views/404.html:/etc/nginx/conf.d/404.html:ro
+    depends_on:
+      - my-blog
   my-blog:
     build: .
     image: baderidris/my-blog

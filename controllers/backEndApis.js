@@ -55,6 +55,7 @@ const sendEmailEthereal = async (req, res) => {
 
   const transporter = nodemailer.createTransport({
     host: 'smtp.ethereal.email',
+    // host: 'smtp.sendgrid.net', from the book, of web-dev with node ...
     port: 587,
     auth: {
       user: MAIL_USER,
