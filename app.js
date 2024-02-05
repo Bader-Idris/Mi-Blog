@@ -32,18 +32,6 @@ const {
   SESSION_SECRET,
 } = require("./config/config");
 
-app.use(helmet({//this helmet stops any new api, keep an eye on it when adding new ones
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      // Add other CSP directives as needed [Content Security Policy]
-      scriptSrc: ["'self'", "http://bun:3000", "'unsafe-inline'"],
-      frameSrc: ["'self'", "https://www.youtube.com"],
-      styleSrcElem: ["'self'", "https://fonts.googleapis.com"],
-    },
-  },
-}));
-
 app.enable("trust proxy");
 app.use(cors());
 // app.use(cors({
@@ -90,6 +78,18 @@ app.use("/", colorScheme, frontAPIs);
 app.use("/api/v1", backEndApis);
 
 // app.use(errorHandlerMiddleware);
+//! Helmet as other csrf protection should be under parsers of static cookies and sessions
+app.use(helmet({//this helmet stops any new api, keep an eye on it when adding new ones
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      // Add other CSP directives as needed [Content Security Policy]
+      scriptSrc: ["'self'", "http://bun:3000", "'unsafe-inline'"],
+      frameSrc: ["'self'", "https://www.youtube.com"],
+      styleSrcElem: ["'self'", "https://fonts.googleapis.com"],
+    },
+  },
+}));
 
 app.get('*', (req, res) => {
   res.status(404).sendFile(path.join(__dirname, './views/404.html'));
@@ -187,4 +187,21 @@ Remember to handle user privacy concerns and ensure that you comply with data pr
   - `message`: Content of the notification.
   - `isRead`: Boolean flag indicating whether the notification has been read.
   - `createdAt`: Timestamp indicating when the notification was created.
+*/
+
+
+
+/* 
+needed titles when sending emails:
+[
+  "Message ID",
+  "Created at:",
+  "From:",
+  "To:",
+  "Subject:",
+  "SPF:",
+  "DKIM:",
+  "DMARC:"
+]
+brought from a real big business service which uses Gmail
 */
