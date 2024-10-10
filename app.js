@@ -113,6 +113,7 @@ const connectWithRetry = async () => {
   }
 };
 connectWithRetry();
+//! make auth friendly with 1Password, Bitwarden, and LastPass
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => 
